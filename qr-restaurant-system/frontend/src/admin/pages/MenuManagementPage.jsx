@@ -421,107 +421,110 @@ export const MenuManagementPage = () => {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Search */}
-        <div className="relative flex-1 max-w-md">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
-          <input
-            type="text"
-            placeholder="Search dishes by name or ingredients..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-medium placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
-          />
-        </div>
+      {/* Sticky Search and Category Filter Controls */}
+      <div className="sticky top-0 z-20 bg-[#faf7f2]/95 backdrop-blur-md pt-2 pb-3 space-y-3">
+        {/* Filter and Search Bar */}
+        <div className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Search */}
+          <div className="relative flex-1 max-w-md">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Search dishes by name or ingredients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-medium placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+            />
+          </div>
 
-        {/* Availability Filter Pills */}
-        <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-xl text-xs font-bold text-stone-600 self-start sm:self-auto">
-          {[
-            { id: 'ALL', label: 'All Dishes' },
-            { id: 'AVAILABLE', label: 'Available' },
-            { id: '86', label: '86’d (Out)' },
-          ].map((filter) => (
-            <button
-              key={filter.id}
-              type="button"
-              onClick={() => setAvailabilityFilter(filter.id)}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                availabilityFilter === filter.id
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'hover:text-slate-900'
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Category Pills Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <button
-          type="button"
-          onClick={() => setActiveCategory('ALL')}
-          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-            activeCategory === 'ALL'
-              ? 'bg-slate-900 text-white shadow-xs'
-              : 'bg-white border border-stone-200 text-stone-600 hover:text-slate-900 hover:bg-stone-50'
-          }`}
-        >
-          <span>All Items</span>
-          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-            activeCategory === 'ALL' ? 'bg-stone-700 text-white' : 'bg-stone-100 text-stone-600'
-          }`}>
-            {categoryCounts.ALL}
-          </span>
-        </button>
-
-        {categories.map((cat) => {
-          const isActive = activeCategory === cat._id;
-          const count = categoryCounts[cat._id] || 0;
-
-          return (
-            <div key={cat._id} className="relative flex items-center group">
+          {/* Availability Filter Pills */}
+          <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-xl text-xs font-bold text-stone-600 self-start sm:self-auto">
+            {[
+              { id: 'ALL', label: 'All Dishes' },
+              { id: 'AVAILABLE', label: 'Available' },
+              { id: '86', label: '86’d (Out)' },
+            ].map((filter) => (
               <button
+                key={filter.id}
                 type="button"
-                onClick={() => setActiveCategory(cat._id)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-white border border-stone-200 text-stone-600 hover:text-slate-900 hover:bg-stone-50'
+                onClick={() => setAvailabilityFilter(filter.id)}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  availabilityFilter === filter.id
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'hover:text-slate-900'
                 }`}
               >
-                <span>{cat.name}</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                  isActive ? 'bg-stone-700 text-white' : 'bg-stone-100 text-stone-600'
-                }`}>
-                  {count}
-                </span>
+                {filter.label}
               </button>
+            ))}
+          </div>
+        </div>
 
-              {/* Edit/Delete category actions for active or hovered tab */}
-              <div className="hidden group-hover:flex items-center gap-0.5 ml-1 bg-white p-0.5 rounded-lg border border-stone-200 shadow-xs">
+        {/* Category Pills Bar */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setActiveCategory('ALL')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+              activeCategory === 'ALL'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-white border border-stone-200 text-stone-600 hover:text-slate-900 hover:bg-stone-50'
+            }`}
+          >
+            <span>All Items</span>
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+              activeCategory === 'ALL' ? 'bg-stone-700 text-white' : 'bg-stone-100 text-stone-600'
+            }`}>
+              {categoryCounts.ALL}
+            </span>
+          </button>
+
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat._id;
+            const count = categoryCounts[cat._id] || 0;
+
+            return (
+              <div key={cat._id} className="relative flex items-center group">
                 <button
                   type="button"
-                  onClick={() => handleOpenEditCategory(cat)}
-                  className="p-1 text-stone-400 hover:text-stone-700 rounded"
-                  title="Edit category"
+                  onClick={() => setActiveCategory(cat._id)}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                    isActive
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white border border-stone-200 text-stone-600 hover:text-slate-900 hover:bg-stone-50'
+                  }`}
                 >
-                  <Edit3 size={11} />
+                  <span>{cat.name}</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    isActive ? 'bg-stone-700 text-white' : 'bg-stone-100 text-stone-600'
+                  }`}>
+                    {count}
+                  </span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setDeleteConfirm({ type: 'category', id: cat._id, name: cat.name })}
-                  className="p-1 text-stone-400 hover:text-rose-600 rounded"
-                  title="Delete category"
-                >
-                  <Trash2 size={11} />
-                </button>
+
+                {/* Edit/Delete category actions for active or hovered tab */}
+                <div className="hidden group-hover:flex items-center gap-0.5 ml-1 bg-white p-0.5 rounded-lg border border-stone-200 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditCategory(cat)}
+                    className="p-1 text-stone-400 hover:text-stone-700 rounded"
+                    title="Edit category"
+                  >
+                    <Edit3 size={11} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteConfirm({ type: 'category', id: cat._id, name: cat.name })}
+                    className="p-1 text-stone-400 hover:text-rose-600 rounded"
+                    title="Delete category"
+                  >
+                    <Trash2 size={11} />
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Dish Catalog Grid or Loading / Empty States */}

@@ -75,12 +75,13 @@ export const DevGateSidebar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/devgate/login');
+    navigate('/devgate/login', { replace: true });
   };
 
   return (
-    <aside className="w-64 bg-slate-950 text-slate-300 min-h-screen p-5 flex flex-col justify-between border-r border-slate-900 select-none shrink-0 font-sans">
-      <div>
+    <aside className="w-64 bg-slate-950 text-slate-300 h-full p-5 flex flex-col justify-between border-r border-slate-900 select-none shrink-0 font-sans overflow-hidden">
+      {/* Top Header & Section Label (Fixed at Top) */}
+      <div className="shrink-0">
         {/* Logo / Header */}
         <div className="flex items-center gap-3 mb-8 px-1">
           <div className="w-9 h-9 rounded-xl bg-amber-600 flex items-center justify-center font-black text-white text-sm shadow-lg shadow-amber-600/30">
@@ -96,51 +97,54 @@ export const DevGateSidebar = () => {
           </div>
         </div>
 
-        {/* Navigation list */}
+        {/* Navigation list label */}
         <div className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider px-3 mb-2">
           Management
         </div>
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = location.pathname === item.path ||
-              (item.path === '/devgate/restaurants' && location.pathname.startsWith('/devgate/restaurants/'));
-
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
-                  active
-                    ? 'bg-amber-600/15 text-amber-400 border border-amber-500/20'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon
-                    size={17}
-                    className={`transition-colors ${
-                      active ? 'text-amber-400' : 'text-slate-400 group-hover:text-white'
-                    }`}
-                  />
-                  <span>{item.label}</span>
-                </div>
-
-                {item.badge !== null && item.badge !== undefined && (
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.badgeColor || 'bg-slate-800 text-slate-300'}`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
       </div>
 
+      {/* Navigation list (internally scrollable if needed) */}
+      <nav className="space-y-1 flex-1 overflow-y-auto pr-0.5 my-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = location.pathname === item.path ||
+            (item.path === '/devgate/restaurants' && location.pathname.startsWith('/devgate/restaurants/'));
+
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              replace
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
+                active
+                  ? 'bg-amber-600/15 text-amber-400 border border-amber-500/20'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Icon
+                  size={17}
+                  className={`transition-colors ${
+                    active ? 'text-amber-400' : 'text-slate-400 group-hover:text-white'
+                  }`}
+                />
+                <span>{item.label}</span>
+              </div>
+
+              {item.badge !== null && item.badge !== undefined && (
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.badgeColor || 'bg-slate-800 text-slate-300'}`}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
       {/* Super-admin Profile card & Footer */}
-      <div className="pt-4 border-t border-slate-900 space-y-3">
+      <div className="pt-4 border-t border-slate-900 space-y-3 mt-auto shrink-0">
         <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center justify-between">
           <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-300 font-black text-xs flex items-center justify-center shrink-0 border border-amber-500/30">

@@ -52,7 +52,7 @@ export const OrderConfirmationPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto">
         <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mb-4 shadow-sm animate-pulse">
           <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
         </div>
@@ -63,8 +63,9 @@ export const OrderConfirmationPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between max-w-md mx-auto p-4 pb-8 relative">
-      {/* Top Section: Celebration & Success Message */}
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between w-full">
+      <div className="max-w-xl mx-auto w-full p-4 sm:p-6 lg:p-8 pb-8 flex flex-col justify-between flex-1 relative">
+        {/* Top Section: Celebration & Success Message */}
       <div className="pt-8">
         <div className="text-center">
           {/* Animated Success Checkmark */}
@@ -181,5 +182,6 @@ export const OrderConfirmationPage = () => {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
 };

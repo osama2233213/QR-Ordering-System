@@ -19,7 +19,7 @@ export const CartPill = () => {
     : totalPrice;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 max-w-md mx-auto z-40">
+    <div className="fixed bottom-4 left-4 right-4 max-w-md sm:max-w-lg lg:max-w-xl mx-auto z-40">
       <button 
         type="button"
         onClick={() => navigate(`/r/${restaurantId}/t/${tableId}/cart`)}

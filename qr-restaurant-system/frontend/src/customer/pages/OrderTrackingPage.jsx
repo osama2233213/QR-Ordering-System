@@ -118,7 +118,7 @@ export const OrderTrackingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center max-w-2xl mx-auto">
         <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mb-4 shadow-sm animate-pulse">
           <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
         </div>
@@ -130,7 +130,7 @@ export const OrderTrackingPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-6 text-center max-w-md mx-auto">
+      <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-6 text-center max-w-2xl mx-auto">
         <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center mb-3 text-xl font-bold shadow-sm">
           !
         </div>
@@ -148,8 +148,9 @@ export const OrderTrackingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between max-w-md mx-auto p-4 pb-8 relative">
-      <div>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between w-full">
+      <div className="max-w-2xl mx-auto w-full p-4 sm:p-6 lg:p-8 pb-8 flex flex-col justify-between flex-1 relative">
+        <div>
         {/* Header Bar */}
         <header className="flex items-center justify-between pb-3 pt-2">
           <button
@@ -344,5 +345,6 @@ export const OrderTrackingPage = () => {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
 };

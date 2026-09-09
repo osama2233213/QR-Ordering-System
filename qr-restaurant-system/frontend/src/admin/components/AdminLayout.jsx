@@ -61,9 +61,9 @@ export const AdminLayout = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] flex antialiased text-slate-900">
+    <div className="h-screen overflow-hidden bg-[#faf7f2] flex antialiased text-slate-900">
       {/* Desktop Persistent Sidebar */}
-      <div className="hidden lg:block w-64 flex-shrink-0">
+      <div className="hidden lg:block w-64 flex-shrink-0 h-full">
         <AdminSidebar />
       </div>
 
@@ -74,16 +74,16 @@ export const AdminLayout = () => {
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileSidebarOpen(false)} 
           />
-          <div className="relative z-10 w-64 flex-1">
+          <div className="relative z-10 w-64 h-full flex-shrink-0">
             <AdminSidebar onClose={() => setMobileSidebarOpen(false)} />
           </div>
         </div>
       )}
 
       {/* Main Administrative Workspace */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         {/* SaaS Top Administrative Header Bar */}
-        <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-stone-200/70 px-4 lg:px-8 py-3 flex items-center justify-between shadow-2xs">
+        <header className="flex-shrink-0 z-30 bg-white/95 backdrop-blur-md border-b border-stone-200/70 px-4 lg:px-8 py-3 flex items-center justify-between shadow-2xs">
           {/* Left: Mobile Toggle & Service Status Pills */}
           <div className="flex items-center gap-2.5 sm:gap-3.5">
             <button
@@ -149,8 +149,10 @@ export const AdminLayout = () => {
         </header>
 
         {/* Dynamic Canvas Area */}
-        <main className="flex-1 p-4 lg:p-8 max-w-7xl w-full mx-auto">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+          <div className="max-w-7xl w-full mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

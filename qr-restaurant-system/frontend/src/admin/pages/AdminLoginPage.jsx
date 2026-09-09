@@ -22,11 +22,11 @@ export const AdminLoginPage = () => {
     // Call async login from AuthContext
     const result = await login(email, password);
 
-    // If successful, clear form and navigate to dashboard
+    // If successful, clear form and navigate to dashboard with history replace
     if (result.success) {
       setEmail("");
       setPassword("");
-      navigate("/admin/dashboard");
+      navigate("/admin/dashboard", { replace: true });
     }
     // If failed, error is already set in AuthContext (displayed below)
   };

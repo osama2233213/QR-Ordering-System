@@ -38,7 +38,7 @@ export const DevGateLoginPage = () => {
       } catch {
         // Continue
       }
-      navigate('/devgate/restaurants');
+      navigate('/devgate/restaurants', { replace: true });
     } else {
       setErrorMessage(result.message || 'Invalid super-admin credentials.');
     }

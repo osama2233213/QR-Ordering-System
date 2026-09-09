@@ -16,6 +16,11 @@ const getCartStorageKey = (restaurantId, tableId) => {
   return `dineflow_cart_${restaurantId}_${tableId}`;
 };
 
+const getNotesStorageKey = (restaurantId, tableId) => {
+  if (!restaurantId || !tableId) return null;
+  return `dineflow_notes_${restaurantId}_${tableId}`;
+};
+
 /**
  * Deterministic cart line-item identity generator.
  * Items with differing notes or extras are kept as distinct cart lines.
@@ -40,6 +45,7 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
   const [status, setStatus] = useState("idle"); // 'idle' | 'initializing' | 'ready' | 'error'
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
+  const [orderNotes, setOrderNotesState] = useState("");
 
   // Ref to prevent duplicate concurrent initializations (e.g. React StrictMode)
   const isInitializingRef = useRef(false);
@@ -83,6 +89,18 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
       console.error("[GuestSession] Failed to persist cart:", e);
     }
   }, []);
+
+  const setOrderNotes = useCallback((notes) => {
+    setOrderNotesState(notes);
+    const key = getNotesStorageKey(restaurantId, tableId);
+    if (key) {
+      if (notes) {
+        localStorage.setItem(key, notes);
+      } else {
+        localStorage.removeItem(key);
+      }
+    }
+  }, [restaurantId, tableId]);
 
   /**
    * Clear session tokens and cached session metadata from storage.
@@ -171,6 +189,10 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
               // Restore cart for this restaurant and table
               const restoredCart = loadCartFromStorage(targetRestaurantId, targetTableId);
               setCart(restoredCart);
+              const restoredNotesKey = getNotesStorageKey(targetRestaurantId, targetTableId);
+              if (restoredNotesKey) {
+                setOrderNotesState(localStorage.getItem(restoredNotesKey) || "");
+              }
 
               setStatus("ready");
               return { success: true, resumed: true };
@@ -215,6 +237,10 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
         // Load or reset scoped cart for this restaurant and table
         const initialCart = loadCartFromStorage(targetRestaurantId, targetTableId);
         setCart(initialCart);
+        const notesKey = getNotesStorageKey(targetRestaurantId, targetTableId);
+        if (notesKey) {
+          setOrderNotesState(localStorage.getItem(notesKey) || "");
+        }
 
         setStatus("ready");
         return { success: true, resumed: false };
@@ -356,8 +382,11 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
    */
   const clearCart = useCallback(() => {
     setCart([]);
+    setOrderNotesState("");
     if (restaurantId && tableId) {
       persistCartToStorage(restaurantId, tableId, []);
+      const key = getNotesStorageKey(restaurantId, tableId);
+      if (key) localStorage.removeItem(key);
     }
   }, [restaurantId, tableId, persistCartToStorage]);
 
@@ -410,6 +439,8 @@ export const GuestSessionProvider = ({ children, initialRestaurantId = null, ini
         removeFromCart,
         clearCart,
         cartTotals,
+        orderNotes,
+        setOrderNotes,
       }}
     >
       {children}

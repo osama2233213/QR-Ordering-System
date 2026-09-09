@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Plus, UtensilsCrossed } from 'lucide-react';
 import { useGuestSession } from '../../context/GuestSessionContext';
 
-export const MenuItemCard = ({ item, onAdd }) => {
+export const MenuItemCard = ({ item, onAdd, onSelect }) => {
   const { addToCart, currency } = useGuestSession();
-  const { restaurantId, tableId } = useParams();
-  const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
 
   if (!item) return null;
 
   const handleCardClick = () => {
-    const itemId = item._id || item.id;
-    if (restaurantId && tableId && itemId) {
-      navigate(`/r/${restaurantId}/t/${tableId}/item/${itemId}`);
+    if (typeof onSelect === 'function') {
+      onSelect(item);
+    } else if (typeof onAdd === 'function') {
+      onAdd(item);
+    } else {
+      addToCart(item);
     }
   };
 
@@ -35,10 +35,10 @@ export const MenuItemCard = ({ item, onAdd }) => {
   return (
     <div 
       onClick={handleCardClick}
-      className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3.5 group cursor-pointer"
+      className="bg-white rounded-2xl p-3 sm:p-3.5 border border-slate-100 shadow-xs hover:shadow-md transition-shadow flex items-center gap-3.5 group cursor-pointer h-full"
     >
       {/* Consistent Fixed-Dimension Image Container */}
-      <div className="w-24 h-24 rounded-xl flex-shrink-0 overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative">
+      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl flex-shrink-0 overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative">
         {hasImage ? (
           <img
             src={item.imageUrl}
@@ -56,9 +56,9 @@ export const MenuItemCard = ({ item, onAdd }) => {
       </div>
 
       {/* Item Body */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5 h-full">
         <div>
-          <h4 className="font-semibold text-slate-900 text-sm truncate leading-snug">
+          <h4 className="font-semibold text-slate-900 text-sm sm:text-base truncate leading-snug">
             {item.name}
           </h4>
           <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">
@@ -71,7 +71,7 @@ export const MenuItemCard = ({ item, onAdd }) => {
             <span className="text-[11px] font-semibold text-brand-600 uppercase">
               {currency || 'PKR'}
             </span>
-            <span className="font-bold text-slate-900 text-sm">
+            <span className="font-bold text-slate-900 text-sm sm:text-base">
               {formattedPrice}
             </span>
           </div>
@@ -80,7 +80,7 @@ export const MenuItemCard = ({ item, onAdd }) => {
             type="button"
             onClick={handleAdd}
             aria-label={`Add ${item.name} to cart`}
-            className="w-8 h-8 rounded-full bg-brand-500 hover:bg-brand-600 active:scale-95 text-white flex items-center justify-center shadow-sm hover:shadow transition-all"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-brand-500 hover:bg-brand-600 active:scale-95 text-white flex items-center justify-center shadow-xs hover:shadow transition-all flex-shrink-0"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
           </button>

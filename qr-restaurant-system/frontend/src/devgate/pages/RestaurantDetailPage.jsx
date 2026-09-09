@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Building2,
@@ -19,9 +19,9 @@ import {
   Mail,
   MapPin,
   FileText,
-  AlertTriangle
-} from 'lucide-react';
-import { devgateApi } from '../../api/devgateApi';
+  AlertTriangle,
+} from "lucide-react";
+import { devgateApi } from "../../api/devgateApi";
 
 export const RestaurantDetailPage = () => {
   const { id } = useParams();
@@ -29,12 +29,12 @@ export const RestaurantDetailPage = () => {
 
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [actionLoading, setActionLoading] = useState(false);
 
   // Reset access modal
   const [showResetModal, setShowResetModal] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
   const [resetSuccess, setResetSuccess] = useState(null);
 
   const fetchTenantDetail = useCallback(async () => {
@@ -45,7 +45,7 @@ export const RestaurantDetailPage = () => {
         setData(res.data.data);
       }
     } catch (err) {
-      console.error('Failed to fetch restaurant details', err);
+      console.error("Failed to fetch restaurant details", err);
     } finally {
       setIsLoading(false);
     }
@@ -61,21 +61,26 @@ export const RestaurantDetailPage = () => {
       await devgateApi.approveRestaurant(id);
       await fetchTenantDetail();
     } catch (err) {
-      alert('Approval failed: ' + (err.response?.data?.message || err.message));
+      alert("Approval failed: " + (err.response?.data?.message || err.message));
     } finally {
       setActionLoading(false);
     }
   };
 
   const handleSuspend = async () => {
-    const reason = window.prompt('Enter reason for tenant suspension:', 'Policy violation or requested by owner');
+    const reason = window.prompt(
+      "Enter reason for tenant suspension:",
+      "Policy violation or requested by owner",
+    );
     if (reason === null) return;
     setActionLoading(true);
     try {
       await devgateApi.suspendRestaurant(id, reason);
       await fetchTenantDetail();
     } catch (err) {
-      alert('Suspension failed: ' + (err.response?.data?.message || err.message));
+      alert(
+        "Suspension failed: " + (err.response?.data?.message || err.message),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -87,7 +92,9 @@ export const RestaurantDetailPage = () => {
       await devgateApi.reactivateRestaurant(id);
       await fetchTenantDetail();
     } catch (err) {
-      alert('Reactivation failed: ' + (err.response?.data?.message || err.message));
+      alert(
+        "Reactivation failed: " + (err.response?.data?.message || err.message),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -100,9 +107,12 @@ export const RestaurantDetailPage = () => {
     try {
       const res = await devgateApi.resetAccess(id, newPassword);
       setResetSuccess(res.data?.data);
-      setNewPassword('');
+      setNewPassword("");
     } catch (err) {
-      alert('Password reset failed: ' + (err.response?.data?.message || err.message));
+      alert(
+        "Password reset failed: " +
+          (err.response?.data?.message || err.message),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -112,7 +122,9 @@ export const RestaurantDetailPage = () => {
     return (
       <div className="py-24 text-center">
         <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-xs text-slate-400 font-medium">Loading restaurant control record...</p>
+        <p className="text-xs text-slate-400 font-medium">
+          Loading restaurant control record...
+        </p>
       </div>
     );
   }
@@ -121,10 +133,15 @@ export const RestaurantDetailPage = () => {
     return (
       <div className="p-8 text-center bg-white rounded-3xl border border-slate-200">
         <AlertTriangle size={32} className="mx-auto text-amber-500 mb-2" />
-        <h3 className="text-base font-bold text-slate-800">Restaurant not found</h3>
-        <p className="text-xs text-slate-500 mt-1">The requested tenant ID could not be located.</p>
+        <h3 className="text-base font-bold text-slate-800">
+          Restaurant not found
+        </h3>
+        <p className="text-xs text-slate-500 mt-1">
+          The requested tenant ID could not be located.
+        </p>
         <Link
           to="/devgate/restaurants"
+          replace
           className="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold text-amber-600 hover:underline"
         >
           <ArrowLeft size={14} /> Return to Directory
@@ -133,13 +150,24 @@ export const RestaurantDetailPage = () => {
     );
   }
 
-  const { restaurant, stats, users = [], recentOrders = [], auditLogs = [] } = data;
-  const initial = restaurant.name ? restaurant.name.charAt(0).toUpperCase() : 'R';
-  const createdDate = new Date(restaurant.createdAt).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const {
+    restaurant,
+    stats,
+    users = [],
+    recentOrders = [],
+    auditLogs = [],
+  } = data;
+  const initial = restaurant.name
+    ? restaurant.name.charAt(0).toUpperCase()
+    : "R";
+  const createdDate = new Date(restaurant.createdAt).toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+  );
 
   return (
     <div className="space-y-6 font-sans">
@@ -147,6 +175,7 @@ export const RestaurantDetailPage = () => {
       <div>
         <Link
           to="/devgate/restaurants"
+          replace
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft size={14} />
@@ -163,30 +192,37 @@ export const RestaurantDetailPage = () => {
 
           <div>
             <div className="flex items-center gap-3 flex-wrap">
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight">{restaurant.name}</h2>
-              {restaurant.status === 'active' && (
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                {restaurant.name}
+              </h2>
+              {restaurant.status === "active" && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active Tenant
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{" "}
+                  Active Tenant
                 </span>
               )}
-              {restaurant.status === 'pending' && (
+              {restaurant.status === "pending" && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" /> Pending Approval
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />{" "}
+                  Pending Approval
                 </span>
               )}
-              {restaurant.status === 'suspended' && (
+              {restaurant.status === "suspended" && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Suspended
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />{" "}
+                  Suspended
                 </span>
               )}
             </div>
 
             <p className="text-xs text-slate-500 mt-1 flex items-center gap-4 flex-wrap">
               <span className="flex items-center gap-1">
-                <MapPin size={13} className="text-slate-400" /> {restaurant.address || 'Address not specified'}
+                <MapPin size={13} className="text-slate-400" />{" "}
+                {restaurant.address || "Address not specified"}
               </span>
               <span className="flex items-center gap-1">
-                <Calendar size={13} className="text-slate-400" /> Onboarded: {createdDate}
+                <Calendar size={13} className="text-slate-400" /> Onboarded:{" "}
+                {createdDate}
               </span>
               <span className="font-mono text-[11px] text-slate-400">
                 ID: {restaurant.id}
@@ -205,7 +241,7 @@ export const RestaurantDetailPage = () => {
             <RefreshCw size={15} />
           </button>
 
-          {restaurant.status === 'pending' && (
+          {restaurant.status === "pending" && (
             <button
               onClick={handleApprove}
               disabled={actionLoading}
@@ -216,7 +252,7 @@ export const RestaurantDetailPage = () => {
             </button>
           )}
 
-          {restaurant.status === 'active' && (
+          {restaurant.status === "active" && (
             <button
               onClick={handleSuspend}
               disabled={actionLoading}
@@ -227,7 +263,7 @@ export const RestaurantDetailPage = () => {
             </button>
           )}
 
-          {restaurant.status === 'suspended' && (
+          {restaurant.status === "suspended" && (
             <button
               onClick={handleReactivate}
               disabled={actionLoading}
@@ -252,46 +288,63 @@ export const RestaurantDetailPage = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total GMV Revenue</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Total GMV Revenue
+            </span>
             <DollarSign size={18} className="text-emerald-500" />
           </div>
           <div className="text-2xl font-black text-slate-900">
-            {restaurant.settings?.currency || 'PKR'} {(stats?.revenue || 0).toLocaleString()}
+            {restaurant.settings?.currency || "PKR"}{" "}
+            {(stats?.revenue || 0).toLocaleString()}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">From non-cancelled orders</p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            From non-cancelled orders
+          </p>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Orders</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Total Orders
+            </span>
             <FileText size={18} className="text-blue-500" />
           </div>
           <div className="text-2xl font-black text-slate-900">
             {(stats?.orders || 0).toLocaleString()}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Lifetime customer tickets</p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Lifetime customer tickets
+          </p>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Tables</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Active Tables
+            </span>
             <Layers size={18} className="text-amber-500" />
           </div>
           <div className="text-2xl font-black text-slate-900">
             {stats?.tables || 0}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Registered QR stations</p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Registered QR stations
+          </p>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Menu Catalog</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Menu Catalog
+            </span>
             <UtensilsCrossed size={18} className="text-indigo-500" />
           </div>
           <div className="text-2xl font-black text-slate-900">
             {stats?.menuItems || 0}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">{stats?.categories || 0} categories</p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            {stats?.categories || 0} categories
+          </p>
         </div>
       </div>
 
@@ -299,18 +352,18 @@ export const RestaurantDetailPage = () => {
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="flex items-center gap-2 px-6 pt-4 border-b border-slate-100 overflow-x-auto">
           {[
-            { id: 'overview', label: 'Overview & Settings' },
-            { id: 'orders', label: `Orders (${recentOrders.length})` },
-            { id: 'users', label: `Team Members (${users.length})` },
-            { id: 'audit', label: `Audit Log (${auditLogs.length})` },
+            { id: "overview", label: "Overview & Settings" },
+            { id: "orders", label: `Orders (${recentOrders.length})` },
+            { id: "users", label: `Team Members (${users.length})` },
+            { id: "audit", label: `Audit Log (${auditLogs.length})` },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`pb-3 px-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
                 activeTab === tab.id
-                  ? 'border-amber-600 text-amber-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? "border-amber-600 text-amber-600"
+                  : "border-transparent text-slate-500 hover:text-slate-800"
               }`}
             >
               {tab.label}
@@ -320,7 +373,7 @@ export const RestaurantDetailPage = () => {
 
         <div className="p-6">
           {/* Tab 1: Overview */}
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -330,19 +383,29 @@ export const RestaurantDetailPage = () => {
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 text-xs">
                     <div className="flex justify-between">
                       <span className="text-slate-500">Legal Owner:</span>
-                      <span className="font-bold text-slate-800">{restaurant.ownerName}</span>
+                      <span className="font-bold text-slate-800">
+                        {restaurant.ownerName}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Primary Contact Email:</span>
-                      <span className="font-mono text-slate-800">{restaurant.email}</span>
+                      <span className="text-slate-500">
+                        Primary Contact Email:
+                      </span>
+                      <span className="font-mono text-slate-800">
+                        {restaurant.email}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">Phone Number:</span>
-                      <span className="font-semibold text-slate-800">{restaurant.phone || 'Not provided'}</span>
+                      <span className="font-semibold text-slate-800">
+                        {restaurant.phone || "Not provided"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">Physical Address:</span>
-                      <span className="font-medium text-slate-800">{restaurant.address || 'Standard Location'}</span>
+                      <span className="font-medium text-slate-800">
+                        {restaurant.address || "Standard Location"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -353,19 +416,34 @@ export const RestaurantDetailPage = () => {
                   </h4>
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Operational Currency:</span>
-                      <span className="font-bold text-slate-800">{restaurant.settings?.currency || 'PKR'}</span>
+                      <span className="text-slate-500">
+                        Operational Currency:
+                      </span>
+                      <span className="font-bold text-slate-800">
+                        {restaurant.settings?.currency || "PKR"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Tax Surcharge Rate:</span>
-                      <span className="font-bold text-slate-800">{restaurant.settings?.taxRate || 0}%</span>
+                      <span className="text-slate-500">
+                        Tax Surcharge Rate:
+                      </span>
+                      <span className="font-bold text-slate-800">
+                        {restaurant.settings?.taxRate || 0}%
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Operating Schedule:</span>
-                      <span className="font-medium text-slate-800">{restaurant.settings?.openingHours || '11:00 AM - 11:00 PM'}</span>
+                      <span className="text-slate-500">
+                        Operating Schedule:
+                      </span>
+                      <span className="font-medium text-slate-800">
+                        {restaurant.settings?.openingHours ||
+                          "11:00 AM - 11:00 PM"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Public Customer Link:</span>
+                      <span className="text-slate-500">
+                        Public Customer Link:
+                      </span>
                       <span className="font-mono text-amber-600 text-[11px] truncate max-w-[200px]">
                         /r/{restaurant.id}/t/[tableId]
                       </span>
@@ -377,7 +455,7 @@ export const RestaurantDetailPage = () => {
           )}
 
           {/* Tab 2: Orders */}
-          {activeTab === 'orders' && (
+          {activeTab === "orders" && (
             <div className="overflow-x-auto">
               {recentOrders.length === 0 ? (
                 <div className="py-12 text-center text-slate-400 text-xs">
@@ -402,13 +480,14 @@ export const RestaurantDetailPage = () => {
                           #{order.id.slice(-6).toUpperCase()}
                         </td>
                         <td className="py-2.5 px-3 font-medium">
-                          Table {order.tableId?.tableNumber || '—'}
+                          Table {order.tableId?.tableNumber || "—"}
                         </td>
                         <td className="py-2.5 px-3">
                           {order.items?.length || 0} dishes
                         </td>
                         <td className="py-2.5 px-3 font-semibold text-slate-900">
-                          {restaurant.settings?.currency || 'PKR'} {order.totalAmount}
+                          {restaurant.settings?.currency || "PKR"}{" "}
+                          {order.totalAmount}
                         </td>
                         <td className="py-2.5 px-3">
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-800">
@@ -416,7 +495,10 @@ export const RestaurantDetailPage = () => {
                           </span>
                         </td>
                         <td className="py-2.5 px-3 text-slate-400">
-                          {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(order.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </td>
                       </tr>
                     ))}
@@ -427,7 +509,7 @@ export const RestaurantDetailPage = () => {
           )}
 
           {/* Tab 3: Users */}
-          {activeTab === 'users' && (
+          {activeTab === "users" && (
             <div className="overflow-x-auto">
               {users.length === 0 ? (
                 <div className="py-12 text-center text-slate-400 text-xs">
@@ -459,7 +541,8 @@ export const RestaurantDetailPage = () => {
                         </td>
                         <td className="py-2.5 px-3">
                           <span className="inline-flex items-center gap-1 text-emerald-600 font-semibold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{" "}
+                            Active
                           </span>
                         </td>
                       </tr>
@@ -471,7 +554,7 @@ export const RestaurantDetailPage = () => {
           )}
 
           {/* Tab 4: Audit Logs */}
-          {activeTab === 'audit' && (
+          {activeTab === "audit" && (
             <div className="space-y-3">
               {auditLogs.length === 0 ? (
                 <div className="py-12 text-center text-slate-400 text-xs">
@@ -492,11 +575,12 @@ export const RestaurantDetailPage = () => {
                           <div className="font-semibold text-slate-800">
                             Executed by {log.actorName} ({log.actorEmail})
                           </div>
-                          {log.metadata && Object.keys(log.metadata).length > 0 && (
-                            <div className="text-[11px] text-slate-400 font-mono mt-0.5">
-                              {JSON.stringify(log.metadata)}
-                            </div>
-                          )}
+                          {log.metadata &&
+                            Object.keys(log.metadata).length > 0 && (
+                              <div className="text-[11px] text-slate-400 font-mono mt-0.5">
+                                {JSON.stringify(log.metadata)}
+                              </div>
+                            )}
                         </div>
                       </div>
                       <span className="text-slate-400 text-[11px]">
@@ -515,16 +599,27 @@ export const RestaurantDetailPage = () => {
       {showResetModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
-            <h3 className="text-base font-bold text-slate-900 mb-1">Reset Restaurant Admin Credentials</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-1">
+              Reset Restaurant Admin Credentials
+            </h3>
             <p className="text-xs text-slate-500 mb-4">
-              Directly reset the master restaurant_admin password for {restaurant.name}.
+              Directly reset the master restaurant_admin password for{" "}
+              {restaurant.name}.
             </p>
 
             {resetSuccess && (
               <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs space-y-1">
                 <div className="font-bold">Password Reset Successful!</div>
-                <div>Admin Email: <span className="font-mono">{resetSuccess.email}</span></div>
-                <div>Temporary Password: <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-300">{resetSuccess.temporaryPassword}</span></div>
+                <div>
+                  Admin Email:{" "}
+                  <span className="font-mono">{resetSuccess.email}</span>
+                </div>
+                <div>
+                  Temporary Password:{" "}
+                  <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-300">
+                    {resetSuccess.temporaryPassword}
+                  </span>
+                </div>
               </div>
             )}
 
@@ -558,7 +653,7 @@ export const RestaurantDetailPage = () => {
                   disabled={actionLoading}
                   className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-xs cursor-pointer disabled:opacity-50"
                 >
-                  {actionLoading ? 'Updating...' : 'Update Password'}
+                  {actionLoading ? "Updating..." : "Update Password"}
                 </button>
               </div>
             </form>

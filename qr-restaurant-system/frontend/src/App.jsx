@@ -1,11 +1,10 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { QrCode, Monitor, Shield, ArrowRight } from 'lucide-react';
 
 // Customer Zone
 import { CustomerApp } from './customer/CustomerApp';
 import { MenuPage } from './customer/pages/MenuPage';
-import { ItemDetailPage } from './customer/pages/ItemDetailPage';
 import { CartPage } from './customer/pages/CartPage';
 import { OrderConfirmationPage } from './customer/pages/OrderConfirmationPage';
 import { OrderTrackingPage } from './customer/pages/OrderTrackingPage';
@@ -128,7 +127,7 @@ export default function App() {
       {/* Customer Mobile Zone (QR Entry) */}
       <Route path="/r/:restaurantId/t/:tableId" element={<CustomerApp />}>
         <Route index element={<MenuPage />} />
-        <Route path="item/:itemId" element={<ItemDetailPage />} />
+        <Route path="item/:itemId" element={<Navigate to="../" replace />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="confirmation" element={<OrderConfirmationPage />} />
         <Route path="tracking/:orderId" element={<OrderTrackingPage />} />

@@ -43,15 +43,24 @@ export const CartPage = () => {
     clearCart,
     tableInfo,
     setActiveOrderId,
+    orderNotes,
+    setOrderNotes,
   } = useGuestSession();
 
-  const [orderNotes, setOrderNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState(null);
 
   const tableLabel = tableInfo?.tableNumber
     ? `Table ${tableInfo.tableNumber}`
     : `Table #${tableId || '12'}`;
+
+  const handleBackToMenu = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(`/r/${restaurantId}/t/${tableId}`, { replace: true });
+    }
+  };
 
   /**
    * Submit active cart to the kitchen via POST /api/orders/place
@@ -88,8 +97,9 @@ export const CartPage = () => {
       // Empty cart upon successful order placement
       clearCart();
 
-      // Navigate to order confirmation screen with created order details in navigation state
+      // Navigate to order confirmation screen with created order details in navigation state (replace cart in history)
       navigate(`/r/${restaurantId}/t/${tableId}/confirmation`, {
+        replace: true,
         state: {
           orderId: createdOrder._id,
           order: createdOrder,
@@ -106,38 +116,40 @@ export const CartPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between max-w-md mx-auto relative">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between w-full relative">
       {/* Sticky Top Bar */}
       <div>
-        <header className="p-4 bg-white/95 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30 flex items-center justify-between shadow-xs">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => navigate(`/r/${restaurantId}/t/${tableId}`)}
-              aria-label="Back to menu"
-              className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <div>
-              <h1 className="font-bold text-slate-900 text-base leading-tight">Your Cart</h1>
-              <p className="text-xs text-brand-600 font-semibold">{tableLabel}</p>
+        <header className="bg-white/95 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30 shadow-xs">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleBackToMenu}
+                aria-label="Back to menu"
+                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <div>
+                <h1 className="font-bold text-slate-900 text-base leading-tight">Your Cart</h1>
+                <p className="text-xs text-brand-600 font-semibold">{tableLabel}</p>
+              </div>
             </div>
-          </div>
 
-          {cart.length > 0 && (
-            <button
-              type="button"
-              onClick={clearCart}
-              className="text-xs font-semibold text-rose-600 hover:text-rose-700 active:scale-95 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors"
-            >
-              Clear
-            </button>
-          )}
+            {cart.length > 0 && (
+              <button
+                type="button"
+                onClick={clearCart}
+                className="text-xs font-semibold text-rose-600 hover:text-rose-700 active:scale-95 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </header>
 
         {/* Content Area */}
-        <main className="p-4 space-y-4">
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4">
           {/* Order Placement Error Notice */}
           {orderError && (
             <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-xl text-xs text-rose-700 flex items-start gap-2.5">
@@ -163,7 +175,7 @@ export const CartPage = () => {
               </p>
               <button
                 type="button"
-                onClick={() => navigate(`/r/${restaurantId}/t/${tableId}`)}
+                onClick={handleBackToMenu}
                 className="mt-5 px-5 py-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-semibold text-xs rounded-xl shadow-xs transition-all"
               >
                 Browse Menu
@@ -273,51 +285,53 @@ export const CartPage = () => {
 
       {/* Bill Breakdown & Place Order CTA */}
       {cart.length > 0 && (
-        <footer className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-30 shadow-lg">
-          {/* Totals Breakdown */}
-          <div className="space-y-1.5 mb-3.5 text-xs">
-            <div className="flex justify-between text-slate-500">
-              <span>Subtotal ({cartTotals?.totalCount || 0} items)</span>
-              <span>
-                {currency || 'PKR'} {(cartTotals?.subtotal || 0).toLocaleString()}
-              </span>
-            </div>
-
-            {cartTotals?.tax > 0 && (
+        <footer className="bg-white border-t border-slate-100 sticky bottom-0 z-30 shadow-lg">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            {/* Totals Breakdown */}
+            <div className="space-y-1.5 mb-3.5 text-xs">
               <div className="flex justify-between text-slate-500">
-                <span>Tax</span>
+                <span>Subtotal ({cartTotals?.totalCount || 0} items)</span>
                 <span>
-                  {currency || 'PKR'} {cartTotals.tax.toLocaleString()}
+                  {currency || 'PKR'} {(cartTotals?.subtotal || 0).toLocaleString()}
                 </span>
               </div>
-            )}
 
-            <div className="border-t border-slate-100 pt-1.5 flex justify-between font-bold text-slate-900 text-sm">
-              <span>Grand Total</span>
-              <span className="text-brand-600">
-                {currency || 'PKR'} {(cartTotals?.grandTotal || 0).toLocaleString()}
-              </span>
+              {cartTotals?.tax > 0 && (
+                <div className="flex justify-between text-slate-500">
+                  <span>Tax</span>
+                  <span>
+                    {currency || 'PKR'} {cartTotals.tax.toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              <div className="border-t border-slate-100 pt-1.5 flex justify-between font-bold text-slate-900 text-sm">
+                <span>Grand Total</span>
+                <span className="text-brand-600">
+                  {currency || 'PKR'} {(cartTotals?.grandTotal || 0).toLocaleString()}
+                </span>
+              </div>
             </div>
-          </div>
 
-          {/* Place Order Button */}
-          <button
-            type="button"
-            onClick={handlePlaceOrder}
-            disabled={isSubmitting || cart.length === 0}
-            className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Sending to Kitchen...</span>
-              </>
-            ) : (
-              <span>
-                Place Order · {currency || 'PKR'} {(cartTotals?.grandTotal || 0).toLocaleString()}
-              </span>
-            )}
-          </button>
+            {/* Place Order Button */}
+            <button
+              type="button"
+              onClick={handlePlaceOrder}
+              disabled={isSubmitting || cart.length === 0}
+              className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Sending to Kitchen...</span>
+                </>
+              ) : (
+                <span>
+                  Place Order · {currency || 'PKR'} {(cartTotals?.grandTotal || 0).toLocaleString()}
+                </span>
+              )}
+            </button>
+          </div>
         </footer>
       )}
     </div>

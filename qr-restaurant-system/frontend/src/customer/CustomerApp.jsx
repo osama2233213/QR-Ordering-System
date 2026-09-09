@@ -13,9 +13,9 @@ const CustomerAppContent = () => {
   }, [restaurantId, tableId, initSession]);
 
   return (
-    <div className="min-h-screen bg-slate-50 max-w-md mx-auto shadow-2xl relative">
+    <div className="min-h-screen bg-slate-50 relative flex flex-col">
       {status === 'initializing' || status === 'idle' ? (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto flex-1">
           <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mb-4 shadow-sm animate-pulse">
             <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
           </div>
@@ -23,7 +23,7 @@ const CustomerAppContent = () => {
           <p className="text-xs text-slate-500 mt-1">Loading your dining experience...</p>
         </div>
       ) : status === 'error' ? (
-        <div className="p-6 text-center pt-24">
+        <div className="p-6 text-center pt-24 max-w-md mx-auto flex-1">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-sm">
             !
           </div>

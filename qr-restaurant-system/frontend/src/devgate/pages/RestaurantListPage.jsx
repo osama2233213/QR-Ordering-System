@@ -77,7 +77,7 @@ export const RestaurantListPage = () => {
       else next.set('status', status);
       next.set('page', '1');
       return next;
-    });
+    }, { replace: true });
   };
 
   const handleSearchSubmit = (e) => {
@@ -88,7 +88,7 @@ export const RestaurantListPage = () => {
       else next.set('search', searchQuery.trim());
       next.set('page', '1');
       return next;
-    });
+    }, { replace: true });
   };
 
   const handlePageChange = (newPage) => {
@@ -97,7 +97,7 @@ export const RestaurantListPage = () => {
         const next = new URLSearchParams(prev);
         next.set('page', newPage.toString());
         return next;
-      });
+      }, { replace: true });
     }
   };
 
